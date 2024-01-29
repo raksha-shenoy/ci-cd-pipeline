@@ -22,7 +22,7 @@ jobs:
   deploy_dev:
     runs-on: ubuntu-latest
     needs: build
-    if: github.event_name == 'push' && github.ref == 'refs/heads/dev'
+    #if: github.event_name == 'push' && github.ref == 'refs/heads/dev'
 
     steps:
       - name: Deploy to Dev
@@ -31,7 +31,7 @@ jobs:
   deploy_qa:
     runs-on: ubuntu-latest
     needs: build
-    if: github.event_name == 'push' && github.ref == 'refs/heads/qa'
+   # if: github.event_name == 'push' && github.ref == 'refs/heads/qa'
 
     steps:
       - name: Deploy to QA
@@ -40,7 +40,7 @@ jobs:
   deploy_prod:
     runs-on: ubuntu-latest
     needs: build
-    if: github.event_name == 'workflow_run' && github.event.workflow == 'CI/CD Workflow' && github.event.workflow_run.event == 'push' && github.event.workflow_run.branch == 'main'
+    #if: github.event_name == 'workflow_run' && github.event.workflow == 'CI/CD Workflow' && github.event.workflow_run.event == 'push' && github.event.workflow_run.branch == 'main'
 
     steps:
       - name: Trigger Approval Workflow
