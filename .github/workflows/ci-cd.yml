@@ -19,4 +19,46 @@ jobs:
       - name: Build
         run: |
           # Add build commands here
+  deploy_dev:
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.event_name == 'push' && github.ref == 'refs/heads/dev'
+
+    steps:
+      - name: Deploy to Dev
+        run: |
+          # Add deployment commands for Dev environment
+  deploy_qa:
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.event_name == 'push' && github.ref == 'refs/heads/qa'
+
+    steps:
+      - name: Deploy to QA
+        run: |
+          # Add deployment commands for QA environment
+  deploy_prod:
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.event_name == 'workflow_run' && github.event.workflow == 'CI/CD Workflow' && github.event.workflow_run.event == 'push' && github.event.workflow_run.branch == 'main'
+
+    steps:
+      - name: Trigger Approval Workflow
+        uses: srt32/approvals-action@v2
+        with:
+          message: 'Approve or reject this deployment'
+          reviewers: 'username' # GitHub username of the person who can approve
+          state: 'pending'
+  approval:
+    runs-on: ubuntu-latest
+    needs: deploy_prod
+    if: github.event_name == 'workflow_run' && github.event.workflow_run.name == 'Deploy to Prod'
+
+    steps:
+      - name: Check Approval
+        uses: srt32/approvals-action@v2
+        with:
+          message: 'Approve or reject this deployment'
+          reviewers: 'username' # GitHub username of the person who can approve
+          state: 'approved'
   
