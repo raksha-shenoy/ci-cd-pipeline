@@ -75,8 +75,8 @@ jobs:
        - name: Request Approval
          uses: softprops/action-gh-release@v1
          with:
-           files:
-           - ./path/to/staging-artifact.zip
+           #files:
+           #- ./path/to/staging-artifact.zip
            tag_name: staging
            title: Request Approval for Staging Deployment
            body: |
