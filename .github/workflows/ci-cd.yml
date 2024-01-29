@@ -57,6 +57,30 @@ jobs:
           # Use the build artifacts in deployment
           cat build/build_output.txt
           # Add deployment commands for QA environment
+  deploy_to_staging:
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Deploy to Staging
+        run: |
+          # Add deployment commands for staging environment
+
+  approval:
+    runs-on: ubuntu-latest
+    needs: deploy_to_staging
+  
+    steps:
+       - name: Request Approval
+         uses: softprops/action-gh-release@v1
+         with:
+           files:
+           - ./path/to/staging-artifact.zip
+           tag_name: staging
+           title: Request Approval for Staging Deployment
+           body: |
+            The staging deployment is ready for approval.
   deploy_prod:
     runs-on: ubuntu-latest
     needs: deploy_qa
