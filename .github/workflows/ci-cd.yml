@@ -19,6 +19,14 @@ jobs:
       - name: Build
         run: |
           # Add build commands here
+          echo "Building the application..."
+          mkdir -p artifacts
+          echo "Some important build output" > artifacts/build_output.txt
+      - name: Archive Build Artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: build-artifacts
+          path: artifacts
   deploy_dev:
     runs-on: ubuntu-latest
     needs: build
@@ -30,14 +38,27 @@ jobs:
         with:
           name: build-artifacts
           path: build
+      - name: Deploy to Dev
+        run: |
+          # Use the build artifacts in deployment
+          cat build/build_output.txt
+          # Add deployment commands for Dev environment
   deploy_qa:
     runs-on: ubuntu-latest
     needs: deploy_dev
    # if: github.event_name == 'push' && github.ref == 'refs/heads/qa'
 
     steps:
+      - name: Download Build Artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: build-artifacts
+          path: build
+
       - name: Deploy to QA
         run: |
+          # Use the build artifacts in deployment
+          cat build/build_output.txt
           # Add deployment commands for QA environment
   deploy_prod:
     runs-on: ubuntu-latest
